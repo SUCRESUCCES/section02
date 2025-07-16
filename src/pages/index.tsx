@@ -1,48 +1,41 @@
 // CSS Module
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import style from "./index.module.css";
 import SearchableLayout from "@/components/searchable-layout";
-import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
 import { InferGetServerSidePropsType } from "next";
+import fetchBooks from "@/lib/fetch-books";
+import fetchRandomBooks from "@/lib/fetch-random-books";
 
-export const getServerSideProps = () => {
-  // getServerSideProps : 컴포넌트보다 먼저 실행되어서, 컴포넌트에 필요한 데이터 불러오는 함수
-  // 사전렌더링하는 과정에서 딱 한번만 실행 => 오직 서버 측에서만 실행
-
-  // 윈도우 객체의 location, alertm confirm 등 사용 불가(window.location)
-
-  const data = "hello";
-
+export const getServerSideProps = async () => {
+  // 직렬방식
+  // const allBooks = await fetchBooks();
+  // const recoBooks = await fetchRandomBooks();
+  // 병렬방식(좀 더 빠름)
+  const [allBooks, recoBooks] = await Promise.all([
+    fetchBooks(),
+    fetchRandomBooks(),
+  ]);
   return {
-    props: {
-      data,
-    },
+    props: { allBooks, recoBooks },
   };
 };
 
 export default function Home({
-  data,
+  allBooks,
+  recoBooks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // InferGetServerSidePropsType : getServerSideProps 함수의 반환값 타입을 자동으로 추론
-  console.log(data);
-
-  // 브라우저 측에서만 실행되는 코드 작성하고 싶을 때
-  useEffect(() => {
-    console.log(window);
-  }, []);
-
   return (
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        {books.map((book) => (
+        {recoBooks.map((book) => (
           <BookItem key={book.id} {...book} />
         ))}
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        {books.map((book) => (
+        {allBooks.map((book) => (
           <BookItem key={book.id} {...book} />
         ))}
       </section>
