@@ -1,15 +1,37 @@
 // CSS Module
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import style from "./index.module.css";
 import SearchableLayout from "@/components/searchable-layout";
 import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
-// @ : src
+import { InferGetServerSidePropsType } from "next";
 
-// Global CSS cannot be imported from files other than your Custom <App>
-// 글로벌 CSS 파일은 App 컴포넌트가 아닌 곳에서는 불러올 수 없다
+export const getServerSideProps = () => {
+  // getServerSideProps : 컴포넌트보다 먼저 실행되어서, 컴포넌트에 필요한 데이터 불러오는 함수
+  // 사전렌더링하는 과정에서 딱 한번만 실행 => 오직 서버 측에서만 실행
 
-export default function Home() {
+  // 윈도우 객체의 location, alertm confirm 등 사용 불가(window.location)
+
+  const data = "hello";
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+export default function Home({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  // InferGetServerSidePropsType : getServerSideProps 함수의 반환값 타입을 자동으로 추론
+  console.log(data);
+
+  // 브라우저 측에서만 실행되는 코드 작성하고 싶을 때
+  useEffect(() => {
+    console.log(window);
+  }, []);
+
   return (
     <div className={style.container}>
       <section>
