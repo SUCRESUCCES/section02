@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  gap: 15px;
+  padding: 20px 10px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+
+  /* 하이퍼링크 기본 설정 없애기 */
+  color: black;
+  text-decoration: none;
+}
+
+.container img {
+  width: 80px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.subTitle {
+  word-break: keep-all;
+  /* 줄바꿈 될때 자연스럽게? */
+}
+
+.author {
+  color: gray;
+}
