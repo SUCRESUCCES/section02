@@ -7,6 +7,7 @@ import fetchBooks from "@/lib/fetch-books";
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
+  // console.log(context);
   const q = context.query.q;
   const books = await fetchBooks(q as string);
   return {
